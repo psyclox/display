@@ -1,0 +1,173 @@
+/* Update Module Styles */
+
+.selection-menu {
+    text-align: center;
+    max-width: 800px;
+}
+
+.os-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    margin: 40px 0;
+}
+
+.os-btn {
+    border: none;
+    border-radius: 12px;
+    height: 100px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+    transition: transform 0.2s;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.os-btn:hover {
+    transform: scale(1.05);
+}
+
+/* Simulation Running */
+.simulation-running {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: none;
+}
+
+/* Windows 10/11 */
+.os-win10,
+.os-win11 {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
+}
+
+.update-content {
+    text-align: center;
+}
+
+.win-spinner {
+    border: 5px solid rgba(255, 255, 255, 0.3);
+    border-top: 5px solid white;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 30px;
+}
+
+.win-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.win-dots div {
+    width: 10px;
+    height: 10px;
+    background: white;
+    border-radius: 50%;
+    animation: dotPulse 1.5s infinite ease-in-out;
+}
+
+.win-dots div:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+.win-dots div:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+.win-dots div:nth-child(4) {
+    animation-delay: 0.3s;
+}
+
+.win-dots div:nth-child(5) {
+    animation-delay: 0.4s;
+}
+
+.os-win10 h1,
+.os-win11 h1 {
+    font-weight: 300;
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+}
+
+/* macOS */
+.os-mac {
+    flex-direction: column;
+}
+
+.apple-logo {
+    font-size: 6rem;
+    color: white;
+    margin-bottom: 40px;
+}
+
+.mac-progress-bar {
+    width: 300px;
+    height: 6px;
+    background: #333;
+    border-radius: 3px;
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) inset;
+}
+
+.mac-progress-fill {
+    width: 0%;
+    height: 100%;
+    background: #fff;
+    transition: width 0.5s ease;
+}
+
+/* BSOD */
+.os-bsod {
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 10% 15%;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.bsod-content h1 {
+    font-size: 8rem;
+    margin-bottom: 2rem;
+    font-weight: normal;
+}
+
+.bsod-content p {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Animations */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes dotPulse {
+
+    0%,
+    100% {
+        transform: scale(0.5);
+        opacity: 0.5;
+    }
+
+    50% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
