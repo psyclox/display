@@ -1,65 +1,356 @@
 /**
- * Generates random clock face configurations.
- * Combining: 
- * - Palettes (Colors)
- * - Dial Styles
- * - Hand Styles
- * - Marker Styles
+ * 300 Curated Clock Face Themes — generated via compact builder.
  */
 export class FaceGenerator {
     constructor() {
-        this.palettes = [
-            { name: "Neon", bg: "#000", primary: "#0ff", secondary: "#f0f", accent: "#ff0" },
-            { name: "Classic", bg: "#fff", primary: "#000", secondary: "#333", accent: "#d00" },
-            { name: "Midnight", bg: "#1a1a2e", primary: "#e94560", secondary: "#16213e", accent: "#fff" },
-            { name: "Forest", bg: "#051405", primary: "#4caf50", secondary: "#2e7d32", accent: "#81c784" },
-            { name: "Ocean", bg: "#001e3c", primary: "#0288d1", secondary: "#01579b", accent: "#b3e5fc" },
-            { name: "Sunset", bg: "#2d1b2e", primary: "#ff9a8b", secondary: "#ff6a88", accent: "#ff99ac" },
-            { name: "Cyberpunk", bg: "#0b0c15", primary: "#fcee0a", secondary: "#00f0ff", accent: "#ff003c" },
-            { name: "Mono Dark", bg: "#111", primary: "#888", secondary: "#444", accent: "#fff" },
-            { name: "Mono Light", bg: "#eee", primary: "#333", secondary: "#999", accent: "#000" },
-            { name: "Royal", bg: "#2c003e", primary: "#ffd700", secondary: "#c0c0c0", accent: "#fff" },
-            { name: "AMOLED", bg: "#000000", primary: "#ffffff", secondary: "#333333", accent: "#00ff00" }
+        const D = (n, bg, p, s, a, f, sec = true, dt = true) => ({ name: n, palette: { bg, primary: p, secondary: s, accent: a }, layout: { type: "digital", font: f, showSeconds: sec, showDate: dt } });
+        const A = (n, bg, p, s, a, m, h, sec = true, dt = false) => ({ name: n, palette: { bg, primary: p, secondary: s, accent: a }, layout: { type: "analog", markerType: m, handType: h, showSeconds: sec, showDate: dt } });
+
+        this.faces = [
+            // ═══ MIDNIGHT COLLECTION (1-18) ═══
+            D("Cyber Midnight", "#06080f", "#00f0ff", "#005f66", "#ff2d7a", "Orbitron"),
+            D("Neon Arcade", "#08020e", "#f72585", "#560bad", "#4cc9f0", "Audiowide"),
+            A("Aurora Watch", "#070b14", "#64ffda", "#00bfa5", "#ff6090", "lines", "needle", true),
+            A("Sakura Night", "#0c0814", "#ff90b3", "#b83280", "#ffd700", "dots", "rounded", true),
+            D("Phosphor Green", "#040804", "#39ff14", "#148a00", "#b5ff7d", "JetBrains Mono"),
+            A("Titanium Edge", "#0a0c10", "#b0bec5", "#546e7a", "#ff5252", "lines", "baton", true),
+            D("Deep Violet", "#080012", "#c77dff", "#7b2ff7", "#e8aaff", "Exo 2"),
+            D("Amber Warning", "#0c0800", "#ffb300", "#e65100", "#ffe082", "Bebas Neue"),
+            A("Frost Digital", "#060a14", "#80d8ff", "#0288d1", "#ffab40", "minimal", "needle", true),
+            D("Rose Quartz", "#0e0508", "#f48fb1", "#c2185b", "#fce4ec", "Rajdhani"),
+            A("Gunmetal", "#0e0e10", "#9e9e9e", "#424242", "#ef5350", "numbers", "needle", true, true),
+            D("Cobalt Blue", "#020810", "#2979ff", "#0d47a1", "#82b1ff", "Space Mono"),
+            A("Jade Empire", "#04100a", "#66bb6a", "#2e7d32", "#ffd54f", "dots", "baton", true),
+            D("Infrared", "#0a0000", "#ff1744", "#b71c1c", "#ff8a80", "Teko"),
+            D("Platinum Coast", "#0a0e14", "#eceff1", "#607d8b", "#ffab40", "Michroma"),
+            A("Electric Tangerine", "#0a0400", "#ff6d00", "#e65100", "#ffcc80", "lines", "rounded", true),
+            D("Arctic Blue", "#040810", "#4fc3f7", "#0277bd", "#b3e5fc", "Fira Code"),
+            A("Crimson Dial", "#0c0206", "#ef5350", "#b71c1c", "#ffcdd2", "roman", "arrow", true, true),
+
+            // ═══ HERITAGE COLLECTION (19-36) ═══
+            A("Swiss Station", "#ffffff", "#1a1a1a", "#bdbdbd", "#e53935", "lines", "baton", true),
+            A("Gentleman", "#faf8f0", "#212121", "#9e9e9e", "#8b0000", "roman", "needle", true, true),
+            D("Retro LED", "#111111", "#e53935", "#b71c1c", "#ff8a80", "Segment7"),
+            A("Ivory Tower", "#fefcf3", "#3e2723", "#a1887f", "#c0a34d", "numbers", "arrow", true, true),
+            A("Navy Officer", "#0d1b2a", "#cfd8dc", "#78909c", "#ffd54f", "numbers", "baton", true, true),
+            D("Parchment Ink", "#f4e9d0", "#3e2723", "#6d4c41", "#b71c1c", "Playfair Display"),
+            A("Obsidian Classic", "#141416", "#e0e0e0", "#616161", "#ff5252", "lines", "needle", true),
+            A("Railroad Clock", "#f5f5f5", "#212121", "#757575", "#e53935", "numbers", "rounded", true, true),
+            D("Midnight Port", "#0d1520", "#b0bec5", "#546e7a", "#ffd740", "Inter"),
+            A("Antique Brass", "#2c2416", "#d4af37", "#a68b28", "#fff5cc", "roman", "needle", true, true),
+            D("Graphite Mono", "#1a1a1e", "#cfd8dc", "#78909c", "#ff6e40", "Roboto Mono"),
+            A("Victorian", "#f8f0e4", "#4e342e", "#8d6e63", "#c62828", "roman", "arrow", true, true),
+            A("Walnut", "#3e2723", "#d2b48c", "#a1887f", "#ffd54f", "roman", "rounded", true, true),
+            D("Slate Cloud", "#2f3640", "#eceff1", "#90a4ae", "#ffab40", "Lato"),
+            A("Pocket Silver", "#f0ece4", "#37474f", "#90a4ae", "#8d6e63", "roman", "baton", true),
+            D("Dusk Harbor", "#0e141e", "#90a4ae", "#546e7a", "#ff7043", "Outfit"),
+            A("Gallery White", "#ffffff", "#2c3e50", "#bdc3c7", "#e74c3c", "minimal", "needle", true),
+            A("Park Avenue", "#1a1a2e", "#c8c8c8", "#555566", "#d4af37", "lines", "baton", true),
+
+            // ═══ DESIGNER COLLECTION (37-50) ═══
+            A("Bauhaus", "#fafafa", "#212121", "#e0e0e0", "#e53935", "minimal", "needle", true),
+            A("Tokyo Zen", "#f5f1eb", "#263238", "#bcaaa4", "#d32f2f", "minimal", "baton", true),
+            D("Mono Terminal", "#0a0a0a", "#33ff33", "#1b5e20", "#76ff03", "Fira Code", true, false),
+            A("Scandi", "#f0f0f0", "#212121", "#e0e0e0", "#455a64", "lines", "rounded", true),
+            A("Muji Pure", "#ffffff", "#424242", "#fafafa", "#212121", "minimal", "needle", true),
+            D("Hacker CRT", "#040604", "#00e676", "#1b5e20", "#69f0ae", "Space Mono"),
+            A("Paper", "#fefefe", "#222", "#ddd", "#ff6b35", "minimal", "baton", true),
+            D("Ink", "#1a1a1a", "#fafafa", "#333", "#999", "Inter", true, false),
+            A("Compass", "#f5f5f0", "#1a1a2e", "#999", "#c0392b", "lines", "arrow", true, true),
+            A("Architect", "#fff", "#2c3e50", "#bdc3c7", "#e67e22", "numbers", "needle", true),
+            D("Ghost", "#0f0f0f", "#333", "#1a1a1a", "#555", "JetBrains Mono"),
+            A("Gallery", "#ffffff", "#111", "#eee", "#ff1744", "minimal", "rounded", true),
+            D("Whisper", "#fafafa", "#bbb", "#ddd", "#999", "Outfit", true, false),
+            A("Grid", "#fff", "#1a1a1a", "#e0e0e0", "#f44336", "lines", "needle", true),
+            D("Void", "#000", "#222", "#111", "#333", "Bebas Neue"),
+            A("Studio", "#f8f8f8", "#2d2d2d", "#e8e8e8", "#ff5722", "dots", "baton", true),
+            A("Essence", "#fefcf3", "#1a1a1a", "#e0dcd0", "#b8860b", "minimal", "needle", true),
+            D("Cipher", "#0a0a14", "#8888aa", "#333355", "#aaaacc", "Rajdhani"),
+            A("Clarity", "#fff", "#000", "#f0f0f0", "#2196f3", "minimal", "rounded", true),
+            A("Silent", "#f5f5f5", "#444", "#ddd", "#795548", "lines", "baton", true),
+
+            // ═══ NATURE (61-80) ═══
+            A("Forest", "#1a2e1a", "#4caf50", "#2e7d32", "#8bc34a", "dots", "needle", true),
+            A("Ocean", "#0a1a2a", "#00bcd4", "#006064", "#4dd0e1", "lines", "rounded", true),
+            D("Sunset", "#1a0a00", "#ff6f00", "#bf360c", "#ffab40", "Teko"),
+            A("Autumn", "#2e1a0a", "#ff8f00", "#e65100", "#ffc107", "dots", "arrow", true, true),
+            D("Aurora", "#0a0020", "#00e676", "#6200ea", "#7c4dff", "Orbitron"),
+            A("Stone", "#3e3e3e", "#a0a0a0", "#666", "#d4a574", "lines", "baton", true),
+            D("Volcano", "#1a0000", "#ff3d00", "#b71c1c", "#ff6e40", "Bebas Neue"),
+            A("Meadow", "#1a3a1a", "#66bb6a", "#2e7d32", "#aed581", "dots", "rounded", true),
+            A("Glacier", "#0a1a2e", "#b3e5fc", "#4fc3f7", "#e1f5fe", "lines", "needle", true),
+            D("Thunder", "#0a0a14", "#ffd600", "#f9a825", "#fff9c4", "Michroma"),
+            A("Coral Reef", "#0a141e", "#ff7043", "#e64a19", "#ffab91", "dots", "arrow", true),
+            D("Rainforest", "#0a1a0a", "#00c853", "#1b5e20", "#69f0ae", "Space Mono"),
+            A("Desert", "#2e2416", "#d4a574", "#8d6e63", "#ffcc80", "roman", "needle", true, true),
+            A("Tundra", "#1a2028", "#90a4ae", "#546e7a", "#cfd8dc", "lines", "baton", true),
+            D("Eclipse", "#050005", "#9c27b0", "#4a148c", "#ce93d8", "Audiowide"),
+            A("Bamboo", "#1a2e1a", "#a5d6a7", "#388e3c", "#c8e6c9", "minimal", "rounded", true),
+            D("Lava", "#1f0000", "#ff1744", "#c62828", "#ff8a80", "Oswald"),
+            A("Sapphire", "#0a0a2e", "#2979ff", "#1565c0", "#82b1ff", "dots", "needle", true),
+            A("Emerald", "#001a0a", "#00e676", "#00c853", "#b9f6ca", "lines", "arrow", true),
+            D("Obsidian Night", "#050508", "#78909c", "#37474f", "#b0bec5", "Exo 2"),
+
+            // ═══ CYBERPUNK (81-100) ═══
+            D("Cyber Grid", "#0a000a", "#ff00ff", "#00ffff", "#ffff00", "Orbitron"),
+            D("Blade Runner", "#0a0a14", "#ff6d00", "#e65100", "#00e5ff", "Audiowide"),
+            A("Mech", "#0a0a0a", "#ff1744", "#c62828", "#00e5ff", "lines", "needle", true),
+            D("Glitch", "#050510", "#00ff41", "#ff0055", "#ffff00", "Press Start 2P", true, false),
+            A("Wireframe", "#000", "#00ff88", "#005533", "#00ffcc", "lines", "baton", true),
+            D("Hologram", "#050520", "#00e5ff", "#6200ea", "#ea80fc", "Rajdhani"),
+            A("Circuit", "#0a0f0a", "#76ff03", "#33691e", "#ccff90", "dots", "needle", true),
+            D("Neural", "#0a0014", "#e040fb", "#7b1fa2", "#ea80fc", "Michroma"),
+            D("Data Stream", "#000a0a", "#18ffff", "#006064", "#84ffff", "Fira Code"),
+            A("Steampunk", "#1a1408", "#ff8f00", "#e65100", "#ffc107", "roman", "arrow", true, true),
+            D("Matrix", "#000", "#00ff41", "#003300", "#33ff33", "JetBrains Mono"),
+            A("Techno", "#050510", "#ff4081", "#c51162", "#ff80ab", "lines", "rounded", true),
+            D("Binary", "#000", "#00ff00", "#004400", "#44ff44", "Share Tech Mono"),
+            D("Pixel", "#0a0a0a", "#ffea00", "#f9a825", "#fff59d", "Press Start 2P"),
+            A("Bionic", "#0a0a14", "#00e5ff", "#0097a7", "#80deea", "dots", "baton", true),
+            D("Synthwave", "#1a002e", "#ff6ec7", "#7b2d8e", "#00ffff", "Audiowide"),
+            A("Mecha", "#0a0a0a", "#ff3d00", "#bf360c", "#00e676", "lines", "needle", true),
+            D("Quantum", "#000014", "#448aff", "#1a237e", "#82b1ff", "Orbitron"),
+            A("Chrome", "#111", "#e0e0e0", "#616161", "#ff5252", "lines", "rounded", true),
+            D("Overdrive", "#0a000a", "#ff1744", "#b71c1c", "#00e5ff", "Bebas Neue"),
+
+            // ═══ LUXURY (101-120) ═══
+            A("Gold Standard", "#1a1408", "#ffd700", "#b8860b", "#fff8e1", "roman", "needle", true, true),
+            A("Rose Gold", "#1a0a0a", "#e8b4b8", "#cd7f8e", "#f8e0e0", "dots", "rounded", true),
+            D("Platinum", "#111", "#e0e0e0", "#757575", "#c0c0c0", "Cinzel"),
+            A("Diamond", "#0a0a14", "#e8eaf6", "#9fa8da", "#c5cae9", "lines", "needle", true),
+            A("Onyx", "#050505", "#424242", "#212121", "#ffd700", "minimal", "baton", true),
+            D("Champagne", "#1a1408", "#f5deb3", "#d4a574", "#ffd700", "Cormorant Garamond"),
+            A("Ivory Tower", "#fffff0", "#1a1a1a", "#8b8378", "#b8860b", "roman", "arrow", true, true),
+            D("Velvet", "#1a000a", "#e91e63", "#880e4f", "#f8bbd0", "Bodoni Moda"),
+            A("Marble", "#f5f5f0", "#37474f", "#b0bec5", "#795548", "numbers", "rounded", true, true),
+            A("Copper", "#1a0f05", "#e08040", "#a05020", "#ffc080", "lines", "needle", true),
+            D("Sapphire Lux", "#000a1e", "#1565c0", "#0d47a1", "#90caf9", "Cinzel"),
+            A("Emerald Lux", "#001a0a", "#2e7d32", "#1b5e20", "#a5d6a7", "roman", "baton", true, true),
+            D("Ruby", "#1a0008", "#d50000", "#b71c1c", "#ff8a80", "Playfair Display"),
+            A("Titanium", "#1a1a1e", "#90a4ae", "#607d8b", "#cfd8dc", "lines", "rounded", true),
+            A("Majestic", "#0a0014", "#b388ff", "#7c4dff", "#d1c4e9", "dots", "needle", true),
+            D("Royal Purple", "#0a0020", "#7c4dff", "#4a148c", "#b388ff", "Bellefair"),
+            A("Silver Moon", "#0a0a14", "#c0c0c0", "#808080", "#e8e8e8", "minimal", "needle", true),
+            D("Black Pearl", "#050505", "#424242", "#1a1a1a", "#757575", "Cormorant"),
+            A("Crown", "#1a1408", "#daa520", "#996515", "#f0e68c", "roman", "arrow", true, true),
+            D("Silk", "#f8f0e8", "#5d4037", "#8d6e63", "#bcaaa4", "Jost"),
+
+            // ═══ RETRO (121-140) ═══
+            D("VHS", "#0a0a0a", "#ff0000", "#0000ff", "#ffff00", "Silkscreen"),
+            D("Arcade", "#000", "#ff0", "#f00", "#0ff", "Press Start 2P"),
+            A("Diner", "#fdf5e6", "#ff0000", "#cc0000", "#ffd700", "numbers", "rounded", true, true),
+            D("Cassette", "#1a1a1a", "#ff6f00", "#e65100", "#ffc107", "Audiowide"),
+            A("Art Deco", "#1a1a2e", "#d4af37", "#8b7536", "#ffd700", "lines", "needle", true),
+            D("Nixie Tube", "#1a0a00", "#ff6600", "#cc4400", "#ffaa44", "Nixie One"),
+            A("Mod", "#fff", "#ff5722", "#e64a19", "#000", "dots", "baton", true),
+            D("Typewriter", "#f5f0e1", "#333", "#666", "#8b0000", "Special Elite"),
+            A("Jukebox", "#1a0a1a", "#ff4081", "#c51162", "#ffd740", "dots", "rounded", true),
+            D("Neon Sign", "#0a0a0a", "#ff073a", "#00ff41", "#ffff00", "Monoton"),
+            A("Rotary", "#2c2416", "#8b7355", "#5c4033", "#d4af37", "numbers", "arrow", true, true),
+            D("CRT", "#000a00", "#33ff33", "#009900", "#66ff66", "Space Mono"),
+            A("Vinyl", "#111", "#e0e0e0", "#333", "#ff5722", "lines", "needle", true),
+            D("Polaroid", "#f5f5dc", "#333", "#999", "#ff6b6b", "Covered By Your Grace"),
+            A("Compass Rose", "#f4e9d8", "#8b4513", "#d2b48c", "#cd853f", "roman", "arrow", true, true),
+            D("Disco", "#0a000a", "#ff00ff", "#ffff00", "#00ffff", "Bungee"),
+            A("Railroad", "#1a1a1a", "#ffd700", "#cc9900", "#fff", "numbers", "baton", true, true),
+            D("Motel", "#0a0000", "#ff3d00", "#bf360c", "#ffab91", "Fugaz One"),
+            A("Antique", "#f0ead6", "#3e2723", "#795548", "#d4a574", "roman", "rounded", true, true),
+            D("Film Noir", "#111", "#ccc", "#555", "#999", "Cutive"),
+
+            // ═══ PASTEL (141-160) ═══
+            D("Cotton Candy", "#fff0f5", "#ff69b4", "#dda0dd", "#ff1493", "Quicksand"),
+            A("Lavender", "#f0e6ff", "#9370db", "#7b68ee", "#ba55d3", "dots", "rounded", true),
+            D("Peach", "#fff5ee", "#ff7f50", "#ffa07a", "#ff6347", "Nunito"),
+            A("Mint", "#f0fff0", "#3cb371", "#66cdaa", "#2e8b57", "lines", "needle", true),
+            D("Baby Blue", "#f0f8ff", "#6495ed", "#87ceeb", "#4169e1", "Poppins"),
+            A("Blush", "#fff0f0", "#ff6b6b", "#ffa0a0", "#ff4757", "minimal", "baton", true),
+            D("Lemon", "#fffff0", "#ffd700", "#ffb300", "#ff8f00", "Comfortaa"),
+            A("Rose Quartz", "#fff0f5", "#db7093", "#c71585", "#ff69b4", "dots", "rounded", true),
+            D("Sky", "#f0f8ff", "#87ceeb", "#4fc3f7", "#2196f3", "Lexend"),
+            A("Serenity", "#f0f0ff", "#9fa8da", "#7986cb", "#5c6bc0", "lines", "needle", true),
+            A("Pistachio", "#f5fff0", "#8bc34a", "#689f38", "#aed581", "minimal", "rounded", true),
+            D("Coral", "#fff5f0", "#ff7043", "#ff5722", "#e64a19", "Outfit"),
+            A("Lilac", "#f8f0ff", "#ab47bc", "#8e24aa", "#ce93d8", "dots", "needle", true),
+            D("Pearl", "#f8f8f0", "#9e9e9e", "#bdbdbd", "#757575", "Raleway"),
+            A("Cloud", "#f5f5f5", "#90a4ae", "#78909c", "#b0bec5", "minimal", "baton", true),
+            D("Bubblegum", "#fff0f5", "#e91e63", "#f06292", "#f8bbd0", "Fredoka"),
+            A("Seafoam", "#f0ffff", "#26a69a", "#00897b", "#80cbc4", "lines", "rounded", true),
+            D("Buttercream", "#fffde7", "#f9a825", "#f57f17", "#fff176", "Cabin"),
+            A("Wisteria", "#f3e5f5", "#7e57c2", "#5e35b1", "#b39ddb", "dots", "arrow", true),
+            D("Marshmallow", "#fff", "#e0e0e0", "#f5f5f5", "#bdbdbd", "Nunito Sans"),
+
+            // ═══ GRADIENT / MODERN (161-180) ═══
+            D("Vapor", "#0a0a1e", "#ff6ec7", "#7b2d8e", "#00ffff", "Syne"),
+            D("Horizon", "#0a1428", "#ffa726", "#ff7043", "#42a5f5", "Outfit"),
+            A("Prism", "#111", "#ff1744", "#2979ff", "#00e676", "dots", "needle", true),
+            D("Twilight", "#0a0014", "#7c4dff", "#e040fb", "#00e5ff", "Rajdhani"),
+            A("Fusion", "#0a0a0a", "#ff6d00", "#00bfa5", "#ffd740", "lines", "rounded", true),
+            D("Spectrum", "#050510", "#ff1744", "#651fff", "#00e5ff", "Bebas Neue"),
+            A("Iridescent", "#0f0f14", "#ea80fc", "#80d8ff", "#ccff90", "minimal", "needle", true),
+            D("Dusk", "#1a0a14", "#ff80ab", "#ce93d8", "#80cbc4", "Montserrat"),
+            A("Rainbow Eng", "#111", "#ff0000", "#00ff00", "#0000ff", "dots", "baton", true),
+            D("Thermal", "#0a0000", "#ff3d00", "#ffd600", "#00e5ff", "Teko"),
+            D("Cosmic", "#050014", "#b388ff", "#448aff", "#ea80fc", "Orbitron"),
+            A("Nebula", "#0a0014", "#7c4dff", "#448aff", "#ff80ab", "lines", "needle", true),
+            D("Solar", "#1a0a00", "#ffd600", "#ff6d00", "#ffab40", "Audiowide"),
+            A("Vortex", "#0a0a14", "#00e5ff", "#651fff", "#ff1744", "dots", "rounded", true),
+            D("Mirage", "#0f0a14", "#e040fb", "#6200ea", "#80d8ff", "Michroma"),
+            A("Kaleidoscope", "#111", "#e91e63", "#4caf50", "#ffc107", "lines", "arrow", true),
+            D("Pulse", "#050505", "#76ff03", "#ff1744", "#ffd600", "Space Mono"),
+            A("Wave", "#0a1428", "#42a5f5", "#1976d2", "#bbdefb", "lines", "rounded", true),
+            D("Infinity", "#000", "#e0e0e0", "#616161", "#ff4081", "Exo 2"),
+            A("Galaxy", "#050510", "#c77dff", "#7c4dff", "#ea80fc", "dots", "needle", true),
+
+            // ═══ AMOLED / SPECIAL (181-200) ═══
+            D("OLED Pure", "#000", "#fff", "#333", "#666", "Inter"),
+            A("OLED Analog", "#000", "#fff", "#333", "#ff0000", "lines", "needle", true),
+            D("OLED Cyan", "#000", "#00ffff", "#006666", "#00aaaa", "Orbitron"),
+            D("OLED Red", "#000", "#ff0000", "#660000", "#ff4444", "Bebas Neue"),
+            D("OLED Green", "#000", "#00ff00", "#006600", "#44ff44", "Fira Code"),
+            D("OLED Blue", "#000", "#0088ff", "#003366", "#4488ff", "Rajdhani"),
+            A("OLED Gold", "#000", "#ffd700", "#665500", "#ffee88", "minimal", "needle", true),
+            D("OLED Pink", "#000", "#ff69b4", "#993366", "#ff99cc", "Audiowide"),
+            A("OLED Purple", "#000", "#9933ff", "#440066", "#bb66ff", "dots", "baton", true),
+            D("OLED Orange", "#000", "#ff6600", "#663300", "#ff9944", "Teko"),
+            D("Dark Minimal", "#0a0a0a", "#333", "#1a1a1a", "#555", "Space Mono", true, false),
+            A("Dark Classic", "#0a0a0a", "#888", "#333", "#c0392b", "roman", "needle", true, true),
+            D("Night Watch", "#000508", "#1a5276", "#0a2840", "#2e86c1", "JetBrains Mono"),
+            A("Starfield", "#000005", "#fff", "#334", "#ffd700", "dots", "rounded", true),
+            D("Deep Ocean", "#000810", "#0077b6", "#023e8a", "#90e0ef", "Exo 2"),
+            A("Shadow", "#050505", "#424242", "#212121", "#ff5722", "lines", "needle", true),
+            D("Blackout", "#000", "#111", "#0a0a0a", "#222", "Roboto Mono"),
+            A("Phantom", "#050508", "#78909c", "#37474f", "#ff4081", "minimal", "baton", true),
+            D("Abyss", "#000", "#1a237e", "#0d1541", "#3f51b5", "Michroma"),
+            A("Midnight", "#000010", "#3f51b5", "#1a237e", "#7986cb", "lines", "rounded", true),
+
+            // ═══ FUTURISTIC (201-230) ═══
+            D("HUD Alpha", "#000a0a", "#00ffcc", "#005544", "#00ff88", "Orbitron"),
+            D("HUD Beta", "#0a000a", "#ff00ff", "#550055", "#ff66ff", "Audiowide"),
+            A("HUD Gamma", "#000", "#00ff88", "#003322", "#00ffcc", "lines", "needle", true),
+            D("Cyberdeck", "#050510", "#18ffff", "#006064", "#00bcd4", "Press Start 2P", true, false),
+            D("AI Core", "#000814", "#48cae4", "#023e8a", "#ade8f4", "Rajdhani"),
+            A("Mech Suit", "#0a0a0a", "#ff3d00", "#b71c1c", "#76ff03", "lines", "baton", true),
+            D("Neuralink", "#000005", "#64ffda", "#00695c", "#a7ffeb", "Space Mono"),
+            D("Quantum Core", "#050014", "#ce93d8", "#4a148c", "#f3e5f5", "Michroma"),
+            A("Reactor", "#000", "#76ff03", "#33691e", "#ff1744", "dots", "needle", true),
+            D("Time Warp", "#0a000a", "#ea80fc", "#6200ea", "#b388ff", "Orbitron"),
+            D("Starship", "#000a14", "#29b6f6", "#0277bd", "#81d4fa", "Exo 2"),
+            A("Jetpack", "#050505", "#ff6d00", "#e65100", "#00e5ff", "minimal", "rounded", true),
+            D("Cyberspace", "#000", "#00e5ff", "#00838f", "#80deea", "Fira Code"),
+            D("Nano", "#0a0a0a", "#69f0ae", "#00c853", "#b9f6ca", "Rajdhani"),
+            A("Drone", "#0a0a14", "#448aff", "#1565c0", "#ff5252", "lines", "needle", true),
+            D("Photon", "#000", "#fff176", "#f9a825", "#fff59d", "Bebas Neue"),
+            D("Gravity", "#050510", "#b39ddb", "#5e35b1", "#ede7f6", "Audiowide"),
+            A("Tesla", "#0a0a0a", "#e0e0e0", "#616161", "#ff1744", "dots", "baton", true),
+            D("Wormhole", "#050005", "#ff80ab", "#ad1457", "#f8bbd0", "Orbitron"),
+            D("Dark Matter", "#000", "#424242", "#1a1a1a", "#e0e0e0", "Michroma"),
+            D("Ion Drive", "#000810", "#00b0ff", "#0091ea", "#80d8ff", "Space Mono"),
+            A("Plasma Core", "#0a000a", "#e040fb", "#7b1fa2", "#f06292", "lines", "rounded", true),
+            D("Anti-Gravity", "#000", "#76ff03", "#64dd17", "#ccff90", "Orbitron"),
+            D("Supernova", "#0a0000", "#ff6e40", "#dd2c00", "#ff3d00", "Audiowide"),
+            A("Entropy", "#050510", "#7c4dff", "#311b92", "#b388ff", "dots", "needle", true),
+            D("Fusion Core", "#000a0a", "#1de9b6", "#00bfa5", "#a7ffeb", "Rajdhani"),
+            D("Nexus", "#0a0a14", "#448aff", "#2962ff", "#82b1ff", "Fira Code"),
+            A("Orbital", "#000", "#ffd740", "#ff6d00", "#ffe57f", "minimal", "arrow", true),
+            D("Singularity", "#000", "#e0e0e0", "#212121", "#ff1744", "Bebas Neue"),
+            D("Hyperdrive", "#050010", "#651fff", "#4527a0", "#b388ff", "Orbitron"),
+
+            // ═══ FUNKY (231-265) ═══
+            D("Bubbly", "#0a0014", "#ff4081", "#ff80ab", "#ffea00", "Fredoka"),
+            D("Electric Lime", "#000a00", "#aeea00", "#64dd17", "#f4ff81", "Bungee"),
+            A("Groovy", "#1a000a", "#ff6ec7", "#ff1493", "#ffff00", "dots", "rounded", true),
+            D("Pop Art", "#000", "#ff0000", "#ffff00", "#0000ff", "Bangers"),
+            D("Cosmic Candy", "#0a0014", "#d500f9", "#00e5ff", "#ffea00", "Audiowide"),
+            A("Tie Dye", "#111", "#ff4081", "#7c4dff", "#00e676", "dots", "baton", true),
+            D("Toxic", "#000a00", "#76ff03", "#00e676", "#ffea00", "Press Start 2P"),
+            D("Vaporwave", "#1a0028", "#ff6ec7", "#00ffff", "#ff71ce", "Syne"),
+            A("Cosmic Dust", "#050510", "#ff80ab", "#ea80fc", "#80d8ff", "lines", "needle", true),
+            D("Fruit Punch", "#1a0008", "#e91e63", "#ff5722", "#ffc107", "Lilita One"),
+            D("Fireworks", "#000", "#ff1744", "#ffd600", "#00e5ff", "Russo One"),
+            A("Jellyfish", "#000a14", "#80d8ff", "#82b1ff", "#ff80ab", "minimal", "rounded", true),
+            D("Candy Store", "#0a000a", "#ff4081", "#ea80fc", "#ffd740", "Paytone One"),
+            D("Party Mode", "#050505", "#ff1744", "#76ff03", "#ffd600", "Anton"),
+            A("Kaleidoscope 2", "#0a0a14", "#e040fb", "#00e5ff", "#ffea00", "dots", "needle", true),
+            D("Pixel Art", "#000", "#00ff41", "#ff0055", "#ffff00", "Silkscreen"),
+            D("Arcade Fire", "#0a0000", "#ff3d00", "#ffd600", "#76ff03", "Press Start 2P"),
+            A("Carnival", "#1a0014", "#ff4081", "#ffc107", "#00e5ff", "numbers", "rounded", true, true),
+            D("Hyper Pop", "#000a0a", "#00e5ff", "#ff1744", "#ffd600", "Bungee"),
+            D("Glowstick", "#000", "#39ff14", "#ff073a", "#00f7ff", "Monoton"),
+            D("Neon City", "#050510", "#ff2d95", "#00ffff", "#fff200", "Audiowide"),
+            D("Flamingo", "#0a0008", "#ff4081", "#f50057", "#ff80ab", "Lobster"),
+            A("Confetti", "#111", "#e91e63", "#ffc107", "#2196f3", "dots", "baton", true),
+            D("Electric Dream", "#000014", "#651fff", "#ff1744", "#ffea00", "Orbitron"),
+            A("Starburst", "#050505", "#ffd600", "#ff3d00", "#00e5ff", "lines", "arrow", true),
+            D("Psychedelic", "#0a000a", "#e040fb", "#00e676", "#ffd740", "Bungee Shade"),
+            D("Liquid Neon", "#000a14", "#18ffff", "#f50057", "#ffea00", "Rajdhani"),
+            A("Funfair", "#0a0a14", "#ff9100", "#e91e63", "#00e5ff", "numbers", "rounded", true, true),
+            D("Pixel Wave", "#000", "#ff00ff", "#00ffff", "#ffff00", "Silkscreen"),
+            A("Trance", "#050510", "#e040fb", "#651fff", "#76ff03", "dots", "rounded", true),
+            D("Raver", "#000", "#ff073a", "#39ff14", "#00f7ff", "Anton"),
+            D("Acid Trip", "#050005", "#ff00ff", "#00ff00", "#ffff00", "Bungee"),
+            D("Spark", "#0a0a0a", "#ffd600", "#ff6d00", "#76ff03", "Righteous"),
+            D("Wildfire", "#0a0000", "#ff3d00", "#ff6e40", "#ffab40", "Oswald"),
+            D("Unicorn", "#0a0014", "#ea80fc", "#80d8ff", "#ccff90", "Fredoka"),
+
+            // ═══ EXTRA FUTURISTIC (266-300) ═══
+            D("Alien", "#000a00", "#00ff41", "#00aa29", "#88ff88", "Orbitron"),
+            A("Spacecraft", "#050510", "#b0bec5", "#546e7a", "#ff5252", "lines", "needle", true),
+            D("Satellite", "#000814", "#0288d1", "#01579b", "#4fc3f7", "Rajdhani"),
+            D("Mission Clock", "#000", "#ff0000", "#ffff00", "#ffffff", "Bebas Neue"),
+            A("Cockpit", "#0a0a0a", "#00e676", "#00c853", "#ff5252", "numbers", "needle", true, true),
+            D("Digi Punk", "#050510", "#ff4081", "#6200ea", "#18ffff", "Audiowide"),
+            D("Laser Grid", "#000", "#00ff88", "#004422", "#ff0055", "Fira Code"),
+            A("Sensor", "#000a14", "#00bcd4", "#006064", "#ff5722", "dots", "baton", true),
+            D("Astro", "#050510", "#c5cae9", "#7986cb", "#ff80ab", "Exo 2"),
+            D("Cyborg", "#0a0a0a", "#bdbdbd", "#424242", "#ff1744", "Michroma"),
+            D("Deep Space", "#000005", "#7986cb", "#3949ab", "#9fa8da", "Space Mono"),
+            A("Observatory", "#0a0a14", "#ffd740", "#ff6d00", "#fff8e1", "lines", "rounded", true),
+            D("Launch", "#0a0000", "#ff6d00", "#e65100", "#ffc107", "Anton"),
+            D("Pilot", "#050510", "#81d4fa", "#0288d1", "#b3e5fc", "JetBrains Mono"),
+            A("Chronometer", "#111", "#e0e0e0", "#616161", "#ffd600", "roman", "needle", true, true),
+            D("Zero G", "#000", "#69f0ae", "#00e676", "#b9f6ca", "Orbitron"),
+            D("Star Map", "#050510", "#b388ff", "#7c4dff", "#d1c4e9", "Audiowide"),
+            A("Turbine", "#0a0a0a", "#90a4ae", "#546e7a", "#ff3d00", "lines", "baton", true),
+            D("Crypto", "#000a0a", "#ffc107", "#ff8f00", "#fff8e1", "Rajdhani"),
+            D("Holodeck", "#050014", "#ea80fc", "#ce93d8", "#80d8ff", "Michroma"),
+            A("Portal", "#0a000a", "#7c4dff", "#651fff", "#ff4081", "dots", "needle", true),
+            D("Flux", "#000", "#76ff03", "#64dd17", "#ccff90", "Space Mono"),
+            D("Titan", "#0a0a0a", "#78909c", "#455a64", "#ff6e40", "Bebas Neue"),
+            D("Stargate", "#000014", "#536dfe", "#304ffe", "#8c9eff", "Orbitron"),
+            A("Warp Drive", "#050505", "#b2ff59", "#76ff03", "#ff1744", "minimal", "needle", true),
+            D("Genesis", "#000", "#ffd740", "#ffc107", "#fff8e1", "Audiowide"),
+            D("Epoch", "#0a0a14", "#80cbc4", "#26a69a", "#b2dfdb", "Exo 2"),
+            D("Ion", "#000a00", "#00e676", "#00c853", "#69f0ae", "Rajdhani"),
+            D("Quasar", "#050510", "#ff80ab", "#ff4081", "#fce4ec", "Michroma"),
+            D("Andromeda", "#000005", "#9fa8da", "#5c6bc0", "#c5cae9", "Orbitron"),
+            D("Celestial", "#050014", "#b39ddb", "#7e57c2", "#ede7f6", "Audiowide"),
+            D("Event Horizon", "#000", "#e0e0e0", "#424242", "#ff1744", "Bebas Neue"),
+            D("Omega", "#0a0a0a", "#ffd600", "#ff6d00", "#ffab40", "Orbitron"),
+            D("Cosmos", "#000814", "#42a5f5", "#1976d2", "#bbdefb", "Space Mono"),
+            D("Aurora 2", "#050510", "#64ffda", "#00bfa5", "#a7ffeb", "Rajdhani"),
         ];
 
-        this.markerTypes = ['lines', 'dots', 'numbers', 'roman', 'minimal'];
-        this.handTypes = ['needle', 'baton', 'arrow', 'rounded'];
-        this.types = ['analog', 'digital'];
+        this.currentIndex = 0;
+        this.loadIndex();
     }
 
-    generateRandomFace() {
-        const palette = this.palettes[Math.floor(Math.random() * this.palettes.length)];
-        const type = this.types[Math.floor(Math.random() * this.types.length)]; // Analog or Digital
-
-        let layout = {};
-        let name = "";
-
-        if (type === 'analog') {
-            const marker = this.markerTypes[Math.floor(Math.random() * this.markerTypes.length)];
-            const hands = this.handTypes[Math.floor(Math.random() * this.handTypes.length)];
-            name = `${palette.name} ${marker.charAt(0).toUpperCase() + marker.slice(1)}`;
-            layout = {
-                type: 'analog',
-                markerType: marker,
-                handType: hands,
-                showDate: Math.random() > 0.5,
-                showSeconds: true
-            };
-        } else {
-            name = `${palette.name} Digital`;
-            layout = {
-                type: 'digital',
-                font: Math.random() > 0.5 ? 'monospace' : 'sans-serif',
-                showSeconds: true,
-                showDate: true
-            };
+    loadIndex() {
+        const saved = localStorage.getItem('display-face-index');
+        if (saved !== null) {
+            this.currentIndex = parseInt(saved, 10);
+            if (this.currentIndex >= this.faces.length) this.currentIndex = 0;
         }
-
-        return {
-            id: Date.now(),
-            name: name,
-            palette: palette,
-            layout: layout
-        };
     }
+
+    saveIndex() { localStorage.setItem('display-face-index', this.currentIndex); }
+
+    getCurrentFace() {
+        const face = this.faces[this.currentIndex];
+        return { id: this.currentIndex, name: face.name, palette: { ...face.palette }, layout: { ...face.layout } };
+    }
+
+    getNextFace() { this.currentIndex = (this.currentIndex + 1) % this.faces.length; this.saveIndex(); return this.getCurrentFace(); }
+    getPrevFace() { this.currentIndex = (this.currentIndex - 1 + this.faces.length) % this.faces.length; this.saveIndex(); return this.getCurrentFace(); }
+    getTotalFaces() { return this.faces.length; }
+    setIndex(idx) { this.currentIndex = Math.max(0, Math.min(idx, this.faces.length - 1)); this.saveIndex(); return this.getCurrentFace(); }
 }

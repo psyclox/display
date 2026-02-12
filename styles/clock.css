@@ -6,59 +6,99 @@
     align-items: center;
     position: relative;
     overflow: hidden;
+    /* Do NOT set page background from face — only the clock area */
+    transition: background-color 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .clock-svg {
-    width: 80vmin;
-    /* Responsive size */
-    height: 80vmin;
-    max-width: 800px;
-    max-height: 800px;
-    filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.5));
-    transition: all 0.5s ease;
+    width: 65vmin;
+    height: 65vmin;
+    max-width: 650px;
+    max-height: 650px;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: drop-shadow(0 8px 32px rgba(0, 0, 0, 0.15));
 }
 
-/* Digital Clock Styles (if rendered as HTML/SVG text) */
+/* Digital Clock */
+.digital-clock-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    border-radius: 24px;
+    /* Contained background for digital faces */
+    background: inherit;
+}
+
 .digital-time {
     font-family: var(--font-mono);
-    font-size: 15vmin;
+    font-size: 16vmin;
     font-weight: 700;
-    text-anchor: middle;
-    filter: drop-shadow(0 0 10px currentColor);
+    text-align: center;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    transition: color 0.4s, font-family 0.4s;
 }
 
 .digital-date {
     font-family: var(--font-main);
-    font-size: 5vmin;
-    text-anchor: middle;
-    opacity: 0.8;
+    font-size: 2.5vmin;
+    text-align: center;
+    opacity: 0.5;
+    margin-top: 16px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    transition: color 0.4s;
 }
 
-/* Controls specific override */
+/* Clock Controls */
 #clock-controls {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 10px;
 }
 
 #clock-controls button {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: var(--glass-hover);
+    border: 1px solid var(--glass-border);
     color: var(--text-color);
-    padding: 8px 16px;
-    border-radius: 20px;
+    padding: 7px 16px;
+    border-radius: var(--radius-pill);
     cursor: pointer;
     font-family: var(--font-main);
-    transition: background 0.3s;
+    font-size: 0.75rem;
+    font-weight: 600;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    letter-spacing: 0.5px;
 }
 
 #clock-controls button:hover {
     background: var(--accent-color);
-    color: #000;
+    border-color: var(--accent-color);
+    color: #fff;
+    transform: scale(1.02);
 }
 
 .face-info {
-    min-width: 150px;
+    min-width: 140px;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.face-info #face-name {
     font-weight: 600;
+    font-size: 0.82rem;
+    letter-spacing: -0.01em;
+    color: var(--text-color);
+}
+
+.face-info .face-counter {
+    font-size: 0.62rem;
+    opacity: 0.35;
+    font-weight: 400;
+    color: var(--text-color);
 }

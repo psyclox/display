@@ -3,17 +3,249 @@
     height: 100%;
 }
 
+/* Text Controls */
 #text-controls {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 #text-controls input[type="text"] {
-    font-size: 1rem;
+    font-size: 0.85rem;
+    font-family: var(--font-main);
     width: 200px;
+    padding: 7px 14px;
+    background: var(--surface);
+    border: 1px solid var(--glass-border);
+    color: var(--text-color);
+    border-radius: var(--radius-sm);
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+#text-controls input[type="text"]:focus {
+    border-color: var(--accent-color);
+}
+
+#text-controls input[type="color"] {
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    background: none;
+    padding: 0;
 }
 
 #text-controls input[type="range"] {
-    width: 100px;
+    width: 80px;
+}
+
+#text-controls .ctrl-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.4;
+    font-weight: 600;
+}
+
+#text-controls .ctrl-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Font Picker Button */
+.font-picker-btn {
+    background: var(--surface);
+    border: 1px solid var(--glass-border);
+    color: var(--text-color);
+    padding: 7px 14px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-family: var(--font-main);
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    max-width: 160px;
+}
+
+.font-picker-btn:hover {
+    border-color: var(--accent-color);
+}
+
+.font-picker-btn .font-icon {
+    font-size: 0.9rem;
+    opacity: 0.6;
+}
+
+/* Font Picker Panel */
+.font-picker-panel {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 500px;
+    max-width: 90vw;
+    max-height: 60vh;
+    background: var(--bg-color);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+    z-index: 300;
+    display: flex;
+    flex-direction: column;
+    animation: fontPanelIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+
+@keyframes fontPanelIn {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+.font-picker-panel.hidden {
+    display: none;
+}
+
+/* Font Panel Header */
+.font-panel-header {
+    padding: 14px 16px 10px;
+    border-bottom: 1px solid var(--glass-border);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.font-panel-header h3 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+.font-search-input {
+    width: 100%;
+    padding: 8px 12px;
+    background: var(--surface);
+    border: 1px solid var(--glass-border);
+    color: var(--text-color);
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    font-family: var(--font-main);
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.font-search-input:focus {
+    border-color: var(--accent-color);
+}
+
+/* Category Tabs */
+.font-category-tabs {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+}
+
+.font-category-tabs::-webkit-scrollbar {
+    height: 0;
+}
+
+.font-cat-btn {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 4px 10px;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    opacity: 0.4;
+    transition: all 0.2s;
+    white-space: nowrap;
+    font-family: var(--font-main);
+}
+
+.font-cat-btn:hover {
+    opacity: 0.7;
+    background: var(--glass-hover);
+}
+
+.font-cat-btn.active {
+    opacity: 1;
+    color: var(--accent-color);
+    background: var(--accent-glow);
+}
+
+/* Font List */
+.font-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+}
+
+.font-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.font-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.font-list::-webkit-scrollbar-thumb {
+    background: var(--glass-border);
+    border-radius: 4px;
+}
+
+.font-item {
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.font-item:hover {
+    background: var(--glass-hover);
+}
+
+.font-item.selected {
+    background: var(--accent-glow);
+    border: 1px solid var(--accent-color);
+}
+
+.font-item .font-preview {
+    font-size: 1.1rem;
+    line-height: 1.2;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.font-item .font-name {
+    font-size: 0.65rem;
+    opacity: 0.4;
+    font-family: var(--font-main);
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
