@@ -10,6 +10,7 @@ export class ClockManager {
         this.generator = new FaceGenerator();
         this.currentFace = null;
         this.use24h = true;
+        this.showAmpm = true;
         this.colorPickerVisible = false;
 
         this.init();
@@ -48,9 +49,16 @@ export class ClockManager {
         this.colorPickerEl.id = 'color-picker-popup';
         this.renderColorPicker();
 
+        // Theme picker popup
+        this.themePickerEl = document.createElement('div');
+        this.themePickerEl.className = 'theme-picker-popup hidden';
+        this.themePickerEl.id = 'theme-picker-popup';
+        this.themePickerVisible = false;
+
         const clockTab = document.getElementById('clock-tab');
         if (clockTab) {
             clockTab.appendChild(this.colorPickerEl);
+            clockTab.appendChild(this.themePickerEl);
         }
 
         document.getElementById('clock-next-btn').addEventListener('click', () => {
@@ -70,12 +78,23 @@ export class ClockManager {
             this.toggleColorPicker();
         });
 
-        // Close color picker when clicking outside
+        // Click on face name → open theme picker
+        document.getElementById('face-name').addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.toggleThemePicker();
+        });
+
+        // Close popups when clicking outside
         document.addEventListener('click', (e) => {
             if (this.colorPickerVisible &&
                 !this.colorPickerEl.contains(e.target) &&
                 e.target.id !== 'clock-customize-btn') {
                 this.hideColorPicker();
+            }
+            if (this.themePickerVisible &&
+                !this.themePickerEl.contains(e.target) &&
+                e.target.id !== 'face-name') {
+                this.hideThemePicker();
             }
         });
     }
@@ -158,6 +177,97 @@ export class ClockManager {
         this.colorPickerVisible = false;
     }
 
+    /* ═══ Theme Picker Popup ═══ */
+    toggleThemePicker() {
+        this.themePickerVisible ? this.hideThemePicker() : this.showThemePicker();
+    }
+
+    showThemePicker() {
+        this.renderThemePicker();
+        this.themePickerEl.classList.remove('hidden');
+        this.themePickerVisible = true;
+        // Focus search
+        const searchInput = this.themePickerEl.querySelector('.theme-picker-search');
+        if (searchInput) setTimeout(() => searchInput.focus(), 50);
+    }
+
+    hideThemePicker() {
+        this.themePickerEl.classList.add('hidden');
+        this.themePickerVisible = false;
+    }
+
+    renderThemePicker() {
+        const groups = this.generator.getGroupedFaces();
+        const currentIdx = this.generator.currentIndex;
+
+        let html = `<div class="theme-picker-header">
+            <span class="theme-picker-title">All Themes</span>
+            <button class="theme-picker-close" title="Close">&times;</button>
+        </div>
+        <input type="text" class="theme-picker-search" placeholder="Search themes..." autocomplete="off">
+        <div class="theme-picker-list">`;
+
+        groups.forEach(group => {
+            html += `<div class="theme-picker-group">
+                <div class="theme-picker-group-label">${group.label}</div>`;
+            group.faces.forEach(f => {
+                const isActive = f.index === currentIdx;
+                const typeIcon = f.type === 'analog' ? '⏱' : '⏲';
+                html += `<div class="theme-picker-item${isActive ? ' active' : ''}" data-index="${f.index}">
+                    <div class="theme-picker-swatch" style="background:${f.bg};border:1px solid rgba(128,128,128,0.3);">
+                        <div class="theme-picker-swatch-dot" style="background:${f.primary};"></div>
+                    </div>
+                    <span class="theme-picker-item-name">${f.name}</span>
+                    <span class="theme-picker-item-type">${typeIcon}</span>
+                </div>`;
+            });
+            html += `</div>`;
+        });
+
+        html += `</div>`;
+        this.themePickerEl.innerHTML = html;
+
+        // Event: click on theme item
+        this.themePickerEl.querySelectorAll('.theme-picker-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const idx = parseInt(item.dataset.index, 10);
+                this.currentFace = this.generator.setIndex(idx);
+                this.renderer.setupFace(this.currentFace);
+                this.updateFaceUI();
+                this.hideThemePicker();
+            });
+        });
+
+        // Event: close button
+        this.themePickerEl.querySelector('.theme-picker-close')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.hideThemePicker();
+        });
+
+        // Event: search filter
+        const searchInput = this.themePickerEl.querySelector('.theme-picker-search');
+        searchInput?.addEventListener('input', () => {
+            const query = searchInput.value.toLowerCase().trim();
+            this.themePickerEl.querySelectorAll('.theme-picker-item').forEach(item => {
+                const name = item.querySelector('.theme-picker-item-name').textContent.toLowerCase();
+                item.style.display = name.includes(query) ? '' : 'none';
+            });
+            // Hide empty groups
+            this.themePickerEl.querySelectorAll('.theme-picker-group').forEach(group => {
+                const visibleItems = group.querySelectorAll('.theme-picker-item:not([style*="display: none"])');
+                group.style.display = visibleItems.length > 0 ? '' : 'none';
+            });
+        });
+        searchInput?.addEventListener('click', (e) => e.stopPropagation());
+
+        // Scroll active item into view
+        requestAnimationFrame(() => {
+            const activeItem = this.themePickerEl.querySelector('.theme-picker-item.active');
+            if (activeItem) activeItem.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        });
+    }
+
     setTimezone(tz) {
         this.engine.setTimezone(tz);
     }
@@ -165,5 +275,10 @@ export class ClockManager {
     set24h(val) {
         this.use24h = val;
         this.engine.set24h(val);
+    }
+
+    setShowAmpm(val) {
+        this.showAmpm = val;
+        this.renderer.showAmpm = val;
     }
 }

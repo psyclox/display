@@ -188,6 +188,12 @@ class App {
             this.saveSettings();
         });
 
+        const showAmpm = document.getElementById('setting-show-ampm');
+        showAmpm?.addEventListener('change', () => {
+            this.clockManager.setShowAmpm(showAmpm.checked);
+            this.saveSettings();
+        });
+
         // Text Settings
         document.getElementById('setting-text-direction')?.addEventListener('change', (e) => {
             this.textManager.setDirection(e.target.value);
@@ -245,6 +251,7 @@ class App {
             showSeconds: document.getElementById('setting-show-seconds')?.checked,
             showDate: document.getElementById('setting-show-date')?.checked,
             use24h: document.getElementById('setting-24h')?.checked,
+            showAmpm: document.getElementById('setting-show-ampm')?.checked,
             textDirection: document.getElementById('setting-text-direction')?.value,
             textOpacity: document.getElementById('setting-text-opacity')?.value,
             textBlur: document.getElementById('setting-text-blur')?.value,
@@ -262,6 +269,7 @@ class App {
             if (s.showSeconds !== undefined) { const el = document.getElementById('setting-show-seconds'); if (el) el.checked = s.showSeconds; }
             if (s.showDate !== undefined) { const el = document.getElementById('setting-show-date'); if (el) el.checked = s.showDate; }
             if (s.use24h !== undefined) { const el = document.getElementById('setting-24h'); if (el) { el.checked = s.use24h; this.clockManager.set24h(s.use24h); } }
+            if (s.showAmpm !== undefined) { const el = document.getElementById('setting-show-ampm'); if (el) { el.checked = s.showAmpm; this.clockManager.setShowAmpm(s.showAmpm); } }
             if (s.textDirection) { const el = document.getElementById('setting-text-direction'); if (el) el.value = s.textDirection; this.textManager.setDirection(s.textDirection); }
             if (s.textOpacity) { const el = document.getElementById('setting-text-opacity'); if (el) el.value = s.textOpacity; this.textManager.setOpacity(parseFloat(s.textOpacity)); }
             if (s.textBlur) { const el = document.getElementById('setting-text-blur'); if (el) el.value = s.textBlur; this.textManager.setBlur(parseInt(s.textBlur, 10)); }

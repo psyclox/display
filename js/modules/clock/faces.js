@@ -48,23 +48,23 @@ export class FaceGenerator {
             A("Park Avenue", "#1a1a2e", "#c8c8c8", "#555566", "#d4af37", "lines", "baton", true),
 
             // ═══ DESIGNER COLLECTION (37-50) ═══
-            A("Bauhaus", "#fafafa", "#212121", "#e0e0e0", "#e53935", "minimal", "needle", true),
-            A("Tokyo Zen", "#f5f1eb", "#263238", "#bcaaa4", "#d32f2f", "minimal", "baton", true),
+            A("Bauhaus", "#fff8f0", "#1a1a1a", "#2962ff", "#fdd835", "dots", "baton", true),
+            A("Tokyo Zen", "#f0ebe0", "#2e3d2e", "#a8c6a0", "#2d5016", "lines", "rounded", true),
             D("Mono Terminal", "#0a0a0a", "#33ff33", "#1b5e20", "#76ff03", "Fira Code", true, false),
             A("Scandi", "#f0f0f0", "#212121", "#e0e0e0", "#455a64", "lines", "rounded", true),
-            A("Muji Pure", "#ffffff", "#424242", "#fafafa", "#212121", "minimal", "needle", true),
+            A("Muji Pure", "#faf6f0", "#5d4037", "#d7ccc8", "#795548", "lines", "rounded", true),
             D("Hacker CRT", "#040604", "#00e676", "#1b5e20", "#69f0ae", "Space Mono"),
-            A("Paper", "#fefefe", "#222", "#ddd", "#ff6b35", "minimal", "baton", true),
+            A("Paper", "#f5efdf", "#1a1a1a", "#c8bfa8", "#a0522d", "numbers", "arrow", true, true),
             D("Ink", "#1a1a1a", "#fafafa", "#333", "#999", "Inter", true, false),
             A("Compass", "#f5f5f0", "#1a1a2e", "#999", "#c0392b", "lines", "arrow", true, true),
             A("Architect", "#fff", "#2c3e50", "#bdc3c7", "#e67e22", "numbers", "needle", true),
             D("Ghost", "#0f0f0f", "#333", "#1a1a1a", "#555", "JetBrains Mono"),
-            A("Gallery", "#ffffff", "#111", "#eee", "#ff1744", "minimal", "rounded", true),
+            A("Gallery", "#f0f2f5", "#37474f", "#b0bec5", "#00897b", "lines", "baton", true),
             D("Whisper", "#fafafa", "#bbb", "#ddd", "#999", "Outfit", true, false),
-            A("Grid", "#fff", "#1a1a1a", "#e0e0e0", "#f44336", "lines", "needle", true),
+            A("Grid", "#eef2ff", "#1a237e", "#9fa8da", "#e65100", "numbers", "baton", true),
             D("Void", "#000", "#222", "#111", "#333", "Bebas Neue"),
             A("Studio", "#f8f8f8", "#2d2d2d", "#e8e8e8", "#ff5722", "dots", "baton", true),
-            A("Essence", "#fefcf3", "#1a1a1a", "#e0dcd0", "#b8860b", "minimal", "needle", true),
+            A("Essence", "#fef8ec", "#3e2723", "#d7cbb8", "#8b6914", "roman", "arrow", true, true),
             D("Cipher", "#0a0a14", "#8888aa", "#333355", "#aaaacc", "Rajdhani"),
             A("Clarity", "#fff", "#000", "#f0f0f0", "#2196f3", "minimal", "rounded", true),
             A("Silent", "#f5f5f5", "#444", "#ddd", "#795548", "lines", "baton", true),
@@ -353,4 +353,41 @@ export class FaceGenerator {
     getPrevFace() { this.currentIndex = (this.currentIndex - 1 + this.faces.length) % this.faces.length; this.saveIndex(); return this.getCurrentFace(); }
     getTotalFaces() { return this.faces.length; }
     setIndex(idx) { this.currentIndex = Math.max(0, Math.min(idx, this.faces.length - 1)); this.saveIndex(); return this.getCurrentFace(); }
+
+    getAllFaces() {
+        return this.faces.map((f, i) => ({ index: i, name: f.name, type: f.layout.type, bg: f.palette.bg, primary: f.palette.primary, accent: f.palette.accent }));
+    }
+
+    getGroupedFaces() {
+        const groups = [
+            { label: 'Midnight', start: 0, end: 17 },
+            { label: 'Heritage', start: 18, end: 35 },
+            { label: 'Designer', start: 36, end: 55 },
+            { label: 'Nature', start: 56, end: 75 },
+            { label: 'Cyberpunk', start: 76, end: 95 },
+            { label: 'Luxury', start: 96, end: 115 },
+            { label: 'Retro', start: 116, end: 135 },
+            { label: 'Pastel', start: 136, end: 155 },
+            { label: 'Modern', start: 156, end: 175 },
+            { label: 'AMOLED', start: 176, end: 195 },
+            { label: 'Futuristic', start: 196, end: 255 },
+            { label: 'Funky', start: 256, end: 295 },
+        ];
+        // Catch any remaining
+        const maxIdx = this.faces.length - 1;
+        const lastEnd = groups[groups.length - 1].end;
+        if (maxIdx > lastEnd) {
+            groups.push({ label: 'Extra', start: lastEnd + 1, end: maxIdx });
+        }
+        return groups.map(g => ({
+            label: g.label,
+            faces: this.faces.slice(g.start, Math.min(g.end + 1, this.faces.length)).map((f, i) => ({
+                index: g.start + i,
+                name: f.name,
+                type: f.layout.type,
+                bg: f.palette.bg,
+                primary: f.palette.primary
+            }))
+        }));
+    }
 }

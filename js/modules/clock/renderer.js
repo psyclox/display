@@ -9,6 +9,7 @@ export class ClockRenderer {
         this.svgNS = "http://www.w3.org/2000/svg";
         this.elements = {};
         this.currentConfig = null;
+        this.showAmpm = true;
     }
 
     createSVG(type, attrs) {
@@ -256,7 +257,7 @@ export class ClockRenderer {
 
         // AM/PM
         if (this.elements.ampm) {
-            this.elements.ampm.textContent = time.is24h ? '' : time.ampm;
+            this.elements.ampm.textContent = (!time.is24h && this.showAmpm) ? time.ampm : '';
         }
 
         // Timezone label
