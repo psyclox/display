@@ -65,12 +65,15 @@ export class ClockEngine {
     }
 
     async fetchTimeFromTimeApiIo() {
-        // robust, often has better uptime
-        const resp = await fetch('https://timeapi.io/api/Time/current/ip');
+        // Use UTC endpoint as it doesn't require IP lookup
+        const resp = await fetch('https://timeapi.io/api/Time/current/zone?timeZone=UTC');
         if (!resp.ok) throw new Error(`TimeAPI.io validation failed: ${resp.status}`);
         const data = await resp.json();
-        // data.dateTime is ISO string-like but check format
-        return new Date(data.dateTime);
+
+        // data.dateTime is like "2023-10-27T10:00:00.1234567" (local to the requested zone)
+        // Since we requested UTC, we treat this string as UTC.
+        // Appending 'Z' ensures Date.parse treats it as UTC.
+        return new Date(data.dateTime + 'Z');
     }
 
     async fetchTimeFromWorldTimeApiIp() {
