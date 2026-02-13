@@ -33,23 +33,58 @@ export class ClockEngine {
     }
 
     /**
-     * Verify local time against WorldTimeAPI.
+     * Verify local time against multiple online Time APIs.
      * Calculates offset if there's drift.
+     * Tries APIs in order until one succeeds.
      */
     async verifyTimeOnline() {
-        try {
-            const resp = await fetch(`https://worldtimeapi.org/api/timezone/${this.timezone}`);
-            if (!resp.ok) return;
-            const data = await resp.json();
-            const serverTime = new Date(data.datetime);
-            const localNow = new Date();
-            this.internetOffset = serverTime.getTime() - localNow.getTime();
-            this.verified = true;
-            console.log(`⏱ Time verified: offset=${this.internetOffset}ms, tz=${this.timezone}`);
-        } catch (err) {
-            console.warn('Time verification failed, using local time:', err.message);
-            this.internetOffset = 0;
+        const apis = [
+            this.fetchTimeFromTimeApiIo.bind(this),
+            this.fetchTimeFromWorldTimeApiIp.bind(this),
+            this.fetchTimeFromWorldTimeApiTz.bind(this)
+        ];
+
+        for (const apiCall of apis) {
+            try {
+                const serverTime = await apiCall();
+                if (serverTime) {
+                    const localNow = new Date();
+                    this.internetOffset = serverTime.getTime() - localNow.getTime();
+                    this.verified = true;
+                    console.log(`⏱ Time verified via internet: offset=${this.internetOffset}ms`);
+                    return; // Success, stop trying
+                }
+            } catch (err) {
+                console.warn(`Time API failed: ${err.message}`);
+            }
         }
+
+        console.error('All time verification APIs failed. Using local device time.');
+        this.internetOffset = 0;
+        this.verified = false;
+    }
+
+    async fetchTimeFromTimeApiIo() {
+        // robust, often has better uptime
+        const resp = await fetch('https://timeapi.io/api/Time/current/ip');
+        if (!resp.ok) throw new Error(`TimeAPI.io validation failed: ${resp.status}`);
+        const data = await resp.json();
+        // data.dateTime is ISO string-like but check format
+        return new Date(data.dateTime);
+    }
+
+    async fetchTimeFromWorldTimeApiIp() {
+        const resp = await fetch('https://worldtimeapi.org/api/ip');
+        if (!resp.ok) throw new Error(`WorldTimeAPI (IP) failed: ${resp.status}`);
+        const data = await resp.json();
+        return new Date(data.datetime);
+    }
+
+    async fetchTimeFromWorldTimeApiTz() {
+        const resp = await fetch(`https://worldtimeapi.org/api/timezone/${this.timezone}`);
+        if (!resp.ok) throw new Error(`WorldTimeAPI (TZ) failed: ${resp.status}`);
+        const data = await resp.json();
+        return new Date(data.datetime);
     }
 
     tick() {
