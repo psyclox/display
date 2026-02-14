@@ -18,7 +18,7 @@ class App {
         this.fullscreenBtn = document.getElementById('fullscreen-btn');
         this.settingsBtn = document.getElementById('settings-btn');
         this.wakeLock = null;
-        this.currentTheme = 'theme-dark';
+        this.currentTheme = 'theme-oled';
 
         this.clockManager = new ClockManager('clock-container');
         this.textManager = new TextManager('text-canvas');
@@ -240,6 +240,7 @@ class App {
     loadTheme() {
         const saved = localStorage.getItem('display-theme');
         if (saved) {
+            if (saved === 'theme-dark') saved = 'theme-oled';
             this.setTheme(saved);
             const sel = document.getElementById('theme-select');
             if (sel) sel.value = saved;
