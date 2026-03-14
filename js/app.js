@@ -8,6 +8,7 @@ import { ClockEngine } from './modules/clock/engine.js';
 import { TextManager } from './modules/text/manager.js';
 import { UpdateSimulator } from './modules/update/simulator.js';
 import { MediaManager } from './modules/media/manager.js';
+import { TypingManager } from './modules/typing/manager.js';
 
 class App {
     constructor() {
@@ -24,6 +25,7 @@ class App {
         this.textManager = new TextManager('text-canvas');
         this.updateSimulator = new UpdateSimulator('update-tab');
         this.mediaManager = new MediaManager('media-tab');
+        this.typingManager = new TypingManager('typing-tab');
 
         this.init();
     }
