@@ -78,6 +78,26 @@ export class TypingSVGEngine {
 
         const lineCount = lines.length;
         const totalCycle = (c.duration + c.pause) * lineCount;
+
+        // Auto-scale SVG dimensions to prevent text cutoff
+        const maxLineWidth = Math.max(0, ...c._lineWidths);
+        const _ox = Math.abs(Number(c.offsetX) || 0);
+        const _oy = Math.abs(Number(c.offsetY) || 0);
+        
+        const autoWidth = maxLineWidth + _ox * 2 + 40; // 40px safety padding
+        if (autoWidth > c.width) {
+            c.width = Math.ceil(autoWidth);
+        }
+
+        let autoHeight = c.height;
+        if (c.multiline) {
+            autoHeight = (lineCount * (c.size + 5)) + _oy * 2 + 30;
+        } else {
+            autoHeight = c.size + _oy * 2 + 20;
+        }
+        if (autoHeight > c.height) {
+            c.height = Math.ceil(autoHeight);
+        }
         const singlePhase = c.duration + c.pause;
 
         // Escape HTML
@@ -162,18 +182,18 @@ export class TypingSVGEngine {
         let keyframes = '';
         let svgBody = '';
 
-        if (style === 'typing' || style === 'typewriter' || style === 'typing-fade' || style === 'typing-glow') {
+        if (style.startsWith('typing-') || style === 'typewriter') {
             // ── TYPING / TYPEWRITER / FADE / GLOW ──
-            const isTypewriter = style === 'typewriter';
+            const isTypewriter = true; // For cursor synchronization
 
-            if (style === 'typing-fade') {
-                svgBody = TypingSVGEngine._buildTypingFade(lines, c, esc);
-            } else if (style === 'typing-glow') {
+            if (style === 'typing-glow') {
                 svgBody = TypingSVGEngine._buildTypingGlow(lines, c, esc);
             } else if (c.multiline) {
+                // Fade-style typewriter logic works beautifully for multiline
                 svgBody = TypingSVGEngine._buildMultilineTyping(lines, c, esc, isTypewriter);
             } else {
-                svgBody = TypingSVGEngine._buildSingleLineTyping(lines, c, esc, isTypewriter);
+                // "classic", "smooth", "v2" variants use the superior typing fade logic
+                svgBody = TypingSVGEngine._buildTypingFade(lines, c, esc, style);
             }
 
             if (hasCursor) {
@@ -365,17 +385,15 @@ ${svgBody}
             const lineWidth = (c._lineWidths && c._lineWidths[i]) ? c._lineWidths[i] : c.size * lines[i].length * 0.6;
             
             // Cursor must follow the RIGHT EDGE of the revealed text
-            // For center-aligned: text bbox starts at textX - lineWidth/2
-            // For left-aligned: text bbox starts at textX (5 + ox)
             const textX = c.center ? (c.width / 2) + ox : 5 + ox;
             let startX, endX;
             if (c.center) {
-                // Center: cursor starts at left edge of text, ends at right edge
-                startX = textX - (lineWidth / 2);
-                endX = textX + (lineWidth / 2);
+                // Center: cursor starts before first char, ends on last char
+                startX = textX - (lineWidth / 2) - charWidth;
+                endX = textX + (lineWidth / 2) - charWidth;
             } else {
-                startX = textX;
-                endX = textX + lineWidth;
+                startX = textX - charWidth;
+                endX = textX + lineWidth - charWidth;
             }
 
             let textY;
@@ -463,9 +481,9 @@ ${svgBody}
     }
 
     // ═══════════════════════════════════════════════════════
-    // TYPING FADE
+    // TYPING FADE (Used for Classic, Smooth, V2 variants)
     // ═══════════════════════════════════════════════════════
-    static _buildTypingFade(lines, c, esc) {
+    static _buildTypingFade(lines, c, esc, variantStr = 'typing-fade') {
         const lineCount = lines.length;
         const totalCycle = (c.duration + c.pause) * lineCount;
         const ox = Number(c.offsetX) || 0;
@@ -500,8 +518,12 @@ ${svgBody}
             for (let j = 0; j < charCount; j++) {
                 const charDelayMs = delay + (j / charCount) * phaseMs;
                 const charStart = (charDelayMs / totalCycle * 100).toFixed(2);
-                const charEnd = ((charDelayMs + 150) / totalCycle * 100).toFixed(2); 
-                parts += `
+                
+                // Define logic based on variant string
+                if (variantStr === 'typing-classic' || variantStr === 'typing-fade') {
+                    // Classic: Instant pop-in (0ms fade duration)
+                    const charEnd = ((charDelayMs + 1) / totalCycle * 100).toFixed(2); 
+                    parts += `
 @keyframes tfc_${i}_${j} { 
     0%{opacity:0} 
     ${Math.max(0, charStart-0.01).toFixed(2)}%{opacity:0} 
@@ -509,28 +531,50 @@ ${svgBody}
     ${charEnd}%{opacity:1} 
     100%{opacity:1} 
 }`;
+                } else if (variantStr === 'typing-smooth') {
+                    // Smooth: Soft fade in (150ms fade duration)
+                    const charEnd = ((charDelayMs + 150) / totalCycle * 100).toFixed(2); 
+                    parts += `
+@keyframes tfc_${i}_${j} { 
+    0%{opacity:0} 
+    ${Math.max(0, charStart-0.01).toFixed(2)}%{opacity:0} 
+    ${charStart}%{opacity:0} 
+    ${charEnd}%{opacity:1} 
+    100%{opacity:1} 
+}`;
+                } else if (variantStr === 'typing-v2') {
+                    // V2 Focus: Soft fade in AND blur removal (200ms)
+                    const charEnd = ((charDelayMs + 200) / totalCycle * 100).toFixed(2); 
+                    parts += `
+@keyframes tfc_${i}_${j} { 
+    0%{opacity:0; filter:blur(4px);} 
+    ${Math.max(0, charStart-0.01).toFixed(2)}%{opacity:0; filter:blur(4px);} 
+    ${charStart}%{opacity:0; filter:blur(4px);} 
+    ${charEnd}%{opacity:1; filter:blur(0px);} 
+    100%{opacity:1; filter:blur(0px);} 
+}`;
+                }
             }
 
+            const anchor = c.center ? 'middle' : 'start';
             const chars = lines[i].split('');
             let charSpans = '';
-            const charWidth = c.size * 0.6;
-            const totalW = chars.length * charWidth;
-            const startX = c.center ? textX - (totalW / 2) : textX;
             for (let j = 0; j < chars.length; j++) {
-                const x = startX + j * charWidth;
-                charSpans += `<tspan x="${x.toFixed(1)}" style="animation:tfc_${i}_${j} ${totalCycle}ms ${c.repeat ? 'infinite' : 'forwards'}; opacity:0;">${esc(chars[j])}</tspan>`;
+                let charText = chars[j] === ' ' ? '&#160;' : esc(chars[j]);
+                charSpans += `<tspan style="animation:tfc_${i}_${j} ${totalCycle}ms ${c.repeat ? 'infinite' : 'forwards'}; opacity:0;">${charText}</tspan>`;
             }
-            texts += `<text class="typing-text tfVis${i}" dominant-baseline="${db}" y="${textY}" text-anchor="start" fill="${esc(c.color)}">${charSpans}</text>\n`;
+            texts += `<text class="typing-text tfVis${i}" dominant-baseline="${db}" x="${textX}" y="${textY}" text-anchor="${anchor}" fill="${esc(c.color)}">${charSpans}</text>\n`;
         }
         parts += `</style>\n`;
         return parts + texts;
     }
 
     // ═══════════════════════════════════════════════════════
-    // TYPING GLOW 
+    // TYPEWRITER GLOW
     // ═══════════════════════════════════════════════════════
     static _buildTypingGlow(lines, c, esc) {
-        let parts = TypingSVGEngine._buildSingleLineTyping(lines, c, esc, false);
+        // Use the superior Typing fade logic
+        let parts = TypingSVGEngine._buildTypingFade(lines, c, esc);
         const lineCount = lines.length;
         const totalCycle = (c.duration + c.pause) * lineCount;
         
@@ -538,7 +582,6 @@ ${svgBody}
         for (let i = 0; i < lineCount; i++) {
             const lineWidth = (c._lineWidths && c._lineWidths[i]) ? c._lineWidths[i] : c.size * lines[i].length * 0.6;
             const textX = c.center ? (c.width / 2) + Number(c.offsetX) : 5 + Number(c.offsetX);
-            const startX = c.center ? textX - (lineWidth / 2) : textX;
             const textY = c.vCenter ? (c.height / 2) + Number(c.offsetY) : c.size + 5 + Number(c.offsetY);
             
             const glowColor = c.glowColor || c.color;
@@ -642,6 +685,13 @@ ${svgBody}
         return TypingSVGEngine._glitchBase(lines, c, esc, 4);
     }
 
+    // ═══════════════════════════════════════════════════════
+    // GLITCH V5 (Cyberpunk)
+    // ═══════════════════════════════════════════════════════
+    static _buildGlitchV5(lines, c, esc) {
+        return TypingSVGEngine._glitchBase(lines, c, esc, 5);
+    }
+
     static _glitchBase(lines, c, esc, version) {
         const lineCount = lines.length;
         const totalCycle = (c.duration + c.pause) * lineCount;
@@ -663,12 +713,36 @@ ${svgBody}
 .gl-a { animation: gl1 0.25s infinite linear alternate-reverse; }
 .gl-b { animation: gl2 0.3s infinite linear alternate-reverse; }`;
         } else if (version === 2) {
-            // V2: Scan lines (horizontal sweeping block)
+            // V2: Aggressive / Jitter
             parts += `
-@keyframes gl1 { 0%{clip-path:inset(5% 0 92% 0); transform:translateX(-3px)} 100%{clip-path:inset(92% 0 5% 0); transform:translateX(-3px)} }
-@keyframes gl2 { 0%{clip-path:inset(15% 0 82% 0); transform:translateX(3px)} 100%{clip-path:inset(82% 0 15% 0); transform:translateX(3px)} }
-.gl-a { animation: gl1 1.5s infinite ease-in-out alternate; }
-.gl-b { animation: gl2 1.2s infinite ease-in-out alternate-reverse; }`;
+@keyframes gl1 {
+  0%{clip-path:inset(20% 0 80% 0); transform:translate(3px,-4px)}
+  10%{clip-path:inset(80% 0 5% 0); transform:translate(-4px,3px) scale(1.02)}
+  20%{clip-path:inset(10% 0 60% 0); transform:translate(2px,5px)}
+  30%{clip-path:inset(50% 0 30% 0); transform:translate(-5px,-2px) skewX(20deg)}
+  40%{clip-path:inset(30% 0 10% 0); transform:translate(5px,-5px)}
+  50%{clip-path:inset(90% 0 2% 0); transform:translate(-2px,4px)}
+  60%{clip-path:inset(5% 0 80% 0); transform:translate(4px,-2px)}
+  70%{clip-path:inset(60% 0 20% 0); transform:translate(-3px,2px)}
+  80%{clip-path:inset(15% 0 70% 0); transform:translate(3px,-4px)}
+  90%{clip-path:inset(70% 0 10% 0); transform:translate(-2px,5px)}
+  100%{clip-path:inset(25% 0 35% 0); transform:translate(5px,-3px)}
+}
+@keyframes gl2 {
+  0%{clip-path:inset(15% 0 82% 0); transform:translate(-3px,4px)}
+  10%{clip-path:inset(40% 0 15% 0); transform:translate(4px,-3px) scale(0.98)}
+  20%{clip-path:inset(85% 0 10% 0); transform:translate(-2px,-5px)}
+  30%{clip-path:inset(20% 0 60% 0); transform:translate(5px,2px) skewX(-20deg)}
+  40%{clip-path:inset(65% 0 5% 0); transform:translate(-5px,5px)}
+  50%{clip-path:inset(10% 0 75% 0); transform:translate(2px,-4px)}
+  60%{clip-path:inset(75% 0 20% 0); transform:translate(-4px,2px)}
+  70%{clip-path:inset(35% 0 40% 0); transform:translate(3px,-2px)}
+  80%{clip-path:inset(5% 0 85% 0); transform:translate(-3px,4px)}
+  90%{clip-path:inset(50% 0 45% 0); transform:translate(2px,-5px)}
+  100%{clip-path:inset(80% 0 5% 0); transform:translate(-5px,3px)}
+}
+.gl-a { animation: gl1 0.4s infinite steps(2, end) alternate-reverse; }
+.gl-b { animation: gl2 0.35s infinite steps(2, end) alternate; }`;
         } else if (version === 3) {
             // V3: Opacity flicker + sudden jumps
             parts += `
@@ -676,13 +750,57 @@ ${svgBody}
 @keyframes gl2 { 0%, 100%{transform:translate(0,0); opacity:0} 15%{transform:translate(5px,-2px); opacity:0.5} 16%{transform:translate(0,0); opacity:0} 45%{transform:translate(-4px,2px); opacity:0.5} 46%{transform:translate(0,0); opacity:0} 70%{clip-path:inset(40% 0 40% 0); transform:translateX(-5px); opacity:0.8} 75%{clip-path:inset(0); transform:translateX(0); opacity:0} }
 .gl-a { animation: gl1 2.5s infinite steps(2, end); }
 .gl-b { animation: gl2 2.5s infinite steps(2, end); }`;
-        } else {
+        } else if (version === 4) {
             // V4: Severe / Matrix style
             parts += `
 @keyframes gl1 { 0%, 100%{transform:none; clip-path:none;} 5%{transform:skewX(-15deg) translate(-10px, 0); clip-path:inset(10% 0 60% 0);} 10%{transform:none; clip-path:none;} 40%{transform:skewX(20deg) translate(10px, 0); clip-path:inset(50% 0 30% 0);} 45%{transform:none; clip-path:none;} }
 @keyframes gl2 { 0%, 100%{transform:none; clip-path:none;} 5%{transform:skewX(15deg) translate(10px, 0); clip-path:inset(60% 0 10% 0);} 10%{transform:none; clip-path:none;} 40%{transform:skewX(-20deg) translate(-10px, 0); clip-path:inset(30% 0 50% 0);} 45%{transform:none; clip-path:none;} }
 .gl-a { animation: gl1 3s infinite steps(1, end); }
 .gl-b { animation: gl2 3s infinite steps(1, end); }`;
+        } else {
+            // V5: Cyberpunk Hard-Slice Glitch
+            // Utilizes high-frequency vertical slices, vibrant cyan/magenta shifting, and main text jittering.
+            parts += `
+@keyframes glM {
+    0%, 100%{ transform: translate(0,0) skewX(0deg); }
+    5% { transform: translate(-3px,-1px) skewX(5deg); }
+    6% { transform: translate(0,0) skewX(0deg); }
+    22% { transform: translate(4px,1px) skewX(-10deg); }
+    23% { transform: translate(0,0) skewX(0deg); }
+    65% { transform: translate(-2px,2px) scaleX(1.05); }
+    66% { transform: translate(0,0) scaleX(1); }
+    88% { transform: translate(5px,-2px) skewX(8deg); }
+    89% { transform: translate(0,0) skewX(0deg); }
+}
+@keyframes gl1 {
+    0%{clip-path:inset(20% 0 80% 0); transform:translate(-4px,1px)}
+    10%{clip-path:inset(60% 0 10% 0); transform:translate(3px,-2px)}
+    20%{clip-path:inset(40% 0 50% 0); transform:translate(-2px,3px)}
+    30%{clip-path:inset(80% 0 5% 0); transform:translate(5px,-1px)}
+    40%{clip-path:inset(10% 0 70% 0); transform:translate(-6px,2px)}
+    50%{clip-path:inset(30% 0 50% 0); transform:translate(4px,-3px)}
+    60%{clip-path:inset(70% 0 15% 0); transform:translate(-3px,1px)}
+    70%{clip-path:inset(5% 0 80% 0); transform:translate(2px,-4px)}
+    80%{clip-path:inset(50% 0 30% 0); transform:translate(-5px,2px)}
+    90%{clip-path:inset(15% 0 60% 0); transform:translate(3px,-1px)}
+    100%{clip-path:inset(20% 0 80% 0); transform:translate(-4px,1px)}
+}
+@keyframes gl2 {
+    0%{clip-path:inset(60% 0 10% 0); transform:translate(4px,-1px)}
+    10%{clip-path:inset(20% 0 80% 0); transform:translate(-3px,2px)}
+    20%{clip-path:inset(80% 0 5% 0); transform:translate(2px,-3px)}
+    30%{clip-path:inset(40% 0 50% 0); transform:translate(-5px,1px)}
+    40%{clip-path:inset(70% 0 15% 0); transform:translate(6px,-2px)}
+    50%{clip-path:inset(10% 0 70% 0); transform:translate(-4px,3px)}
+    60%{clip-path:inset(30% 0 50% 0); transform:translate(3px,-1px)}
+    70%{clip-path:inset(50% 0 30% 0); transform:translate(-2px,4px)}
+    80%{clip-path:inset(5% 0 80% 0); transform:translate(5px,-2px)}
+    90%{clip-path:inset(15% 0 60% 0); transform:translate(-3px,1px)}
+    100%{clip-path:inset(60% 0 10% 0); transform:translate(4px,-1px)}
+}
+.gl-m { animation: glM 3.2s infinite ease-out; }
+.gl-a { animation: gl1 0.6s infinite steps(2, end) alternate-reverse; opacity: 0.8 !important; }
+.gl-b { animation: gl2 0.7s infinite steps(2, end) alternate; opacity: 0.8 !important; }`;
         }
 
         for (let i = 0; i < lineCount; i++) {
@@ -699,16 +817,22 @@ ${svgBody}
         for (let i = 0; i < lineCount; i++) {
             let colors = { a: 'rgba(255,0,0,0.5)', b: 'rgba(0,255,255,0.5)' };
             let blend = 'mix-blend-mode:screen;';
+            let mainStyle = '';
+            let mainClass = 'typing-text';
             if (version === 2) {
-                colors = { a: c.color, b: c.color };
-                blend = 'opacity: 0.5;';
+                blend = 'mix-blend-mode:difference;';
             } else if (version === 3) {
                 colors = { a: c.color, b: 'rgba(255,255,255,0.8)' };
                 blend = '';
+                mainStyle = 'animation: gl1 2.5s infinite steps(2, end);';
+            } else if (version === 5) {
+                colors = { a: '#00ffff', b: '#ff003c' };
+                blend = 'mix-blend-mode: screen;'; 
+                mainClass = 'typing-text gl-m';
             }
 
             parts += `<g class="gVis${i}">
-    <text class="typing-text" dominant-baseline="${db}" x="${textX}" y="${textY}" text-anchor="${anchor}" fill="${esc(c.color)}" style="${version === 3 ? 'animation: gl1 2.5s infinite steps(2, end);' : ''}">${esc(lines[i])}</text>
+    <text class="${mainClass}" dominant-baseline="${db}" x="${textX}" y="${textY}" text-anchor="${anchor}" fill="${esc(c.color)}" style="${mainStyle}">${esc(lines[i])}</text>
     <text class="typing-text gl-a" dominant-baseline="${db}" x="${textX}" y="${textY}" text-anchor="${anchor}" fill="${colors.a}" style="text-shadow:none; ${blend}">${esc(lines[i])}</text>
     <text class="typing-text gl-b" dominant-baseline="${db}" x="${textX}" y="${textY}" text-anchor="${anchor}" fill="${colors.b}" style="text-shadow:none; ${blend}">${esc(lines[i])}</text>
 </g>\n`;

@@ -7,7 +7,6 @@ import { ClockManager } from './modules/clock/manager.js';
 import { ClockEngine } from './modules/clock/engine.js';
 import { TextManager } from './modules/text/manager.js';
 import { UpdateSimulator } from './modules/update/simulator.js';
-import { MediaManager } from './modules/media/manager.js';
 import { TypingManager } from './modules/typing/manager.js';
 
 class App {
@@ -24,7 +23,6 @@ class App {
         this.clockManager = new ClockManager('clock-container');
         this.textManager = new TextManager('text-canvas');
         this.updateSimulator = new UpdateSimulator('update-tab');
-        this.mediaManager = new MediaManager('media-tab');
         this.typingManager = new TypingManager('typing-tab');
 
         this.init();
@@ -209,12 +207,6 @@ class App {
             this.textManager.setBlur(parseInt(e.target.value, 10));
             this.saveSettings();
         });
-
-        // Media Settings
-        document.getElementById('setting-slide-duration')?.addEventListener('change', (e) => {
-            this.mediaManager.setDelay(parseInt(e.target.value, 10));
-            this.saveSettings();
-        });
     }
 
     setTheme(themeName) {
@@ -258,7 +250,6 @@ class App {
             textDirection: document.getElementById('setting-text-direction')?.value,
             textOpacity: document.getElementById('setting-text-opacity')?.value,
             textBlur: document.getElementById('setting-text-blur')?.value,
-            slideDuration: document.getElementById('setting-slide-duration')?.value,
             timezone: document.getElementById('setting-timezone')?.value,
         };
         localStorage.setItem('display-settings', JSON.stringify(s));
@@ -276,7 +267,6 @@ class App {
             if (s.textDirection) { const el = document.getElementById('setting-text-direction'); if (el) el.value = s.textDirection; this.textManager.setDirection(s.textDirection); }
             if (s.textOpacity) { const el = document.getElementById('setting-text-opacity'); if (el) el.value = s.textOpacity; this.textManager.setOpacity(parseFloat(s.textOpacity)); }
             if (s.textBlur) { const el = document.getElementById('setting-text-blur'); if (el) el.value = s.textBlur; this.textManager.setBlur(parseInt(s.textBlur, 10)); }
-            if (s.slideDuration) { const el = document.getElementById('setting-slide-duration'); if (el) el.value = s.slideDuration; this.mediaManager.setDelay(parseInt(s.slideDuration, 10)); }
             if (s.timezone) { const el = document.getElementById('setting-timezone'); if (el) el.value = s.timezone; this.clockManager.setTimezone(s.timezone); }
         } catch (e) { console.error('Settings load error:', e); }
     }

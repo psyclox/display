@@ -4,41 +4,22 @@
  */
 import { TypingSVGEngine } from './engine.js';
 
-// Top 142 popular, diverse, and unique Google Fonts
-const GOOGLE_FONTS = [
-    'ABeeZee','Abel','Abril Fatface','Acme','Alegreya','Alegreya Sans','Alfa Slab One',
-    'Amatic SC','Amiri','Anton','Architects Daughter','Archivo','Archivo Narrow',
-    'Arimo','Arsenal','Asap','Assistant','Bebas Neue','Bangers','Barlow','Barlow Condensed',
-    'Baskervville','Be Vietnam Pro','Bebas Neue','Bitter','Black Ops One','Blinker','Bodoni Moda',
-    'Bree Serif','Cabin','Cairo','Cantarell','Cardo','Caveat','Caveat Brush','Chakra Petch','Changa',
-    'Cinzel','Cinzel Decorative','Comfortaa','Comic Neue','Commissioner','Concert One',
-    'Cormorant Garamond','Courier Prime','Crimson Pro','Crimson Text','DM Mono','DM Sans','DM Serif Display',
-    'Dancing Script','Dosis','EB Garamond','Eczar','El Messiri','Exo','Exo 2','Fira Code','Fira Sans',
-    'Fira Sans Condensed','Fjalla One','Francois One','Fredoka One','Fugaz One','Gelasio',
-    'Glegoo','Gloria Hallelujah','Gothic A1','Great Vibes','Heebo','Hind','Hind Madurai',
-    'Hind Siliguri','IBM Plex Mono','IBM Plex Sans','IBM Plex Serif','Inconsolata','Indie Flower',
-    'Inter','Josefin Sans','Josefin Slab','Jost','Jura','Kalam','Kanit','Karla','Kaushan Script',
-    'Lato','Lexend','Lexend Deca','Libre Baskerville','Libre Franklin','Lilita One',
-    'Lobster','Lobster Two','Lora','Luckiest Guy','Macondo','Manrope','Martel','Mate',
-    'Maven Pro','Merriweather','Merriweather Sans','Monoton','Montserrat','Montserrat Alternates',
-    'Mukta','Mulish','Nanum Gothic','Nanum Myeongjo','Noto Sans','Noto Serif',
-    'Nunito','Nunito Sans','Old Standard TT','Open Sans','Orbitron','Oswald','Outfit','Overpass',
-    'Oxygen','PT Sans','PT Sans Narrow','PT Serif','Pacifico','Patrick Hand','Permanent Marker',
-    'Play','Playfair Display','Poppins','Press Start 2P','Prompt','Public Sans','Quicksand',
-    'Rajdhani','Raleway','Readex Pro','Righteous','Roboto','Roboto Condensed',
-    'Roboto Mono','Roboto Slab','Rubik','Russo One','Saira','Saira Condensed','Satisfy',
-    'Shadows Into Light','Share Tech Mono','Signika','Signika Negative','Sintony','Slabo 27px',
-    'Source Code Pro','Source Sans 3','Source Serif 4','Space Grotesk','Space Mono',
-    'Special Elite','Spectral','Syne','Teko','Titillium Web','Trade Winds',
-    'Ubuntu','Ubuntu Mono','Varela Round','Vidaloka','Work Sans','Yanone Kaffeesatz',
-    'Yantramanav','Zilla Slab','Zilla Slab Highlight','monospace'
+import { FontManager } from '../utils/fonts.js';
+
+const EXTRA_FONTS = [
+    'Permanent Marker', 'Sedgwick Ave', 'Rock Salt', 'Just Another Hand', 'Covered By Your Grace',
+    'Cinzel Decorative', 'Cormorant', 'Playfair Display SC', 'Syncopate', 'Space Grotesk',
+    'Bebas Neue', 'Oswald', 'Anton', 'Righteous', 'Teko', 'Monoton', 'Audiowide', 'Michroma', 'Silkscreen'
 ];
+const _baseFonts = new FontManager().getFontList();
+const GOOGLE_FONTS = [...new Set([..._baseFonts, ...EXTRA_FONTS])].sort();
 
 export class TypingManager {
     constructor(containerId) {
         this.container = document.getElementById(containerId);
         if (!this.container) return;
         this.config = { ...TypingSVGEngine.DEFAULTS };
+        this.config.repeat = true;
         this.config.lines = ['Hello World!', 'Welcome to Typing SVG', 'Customize everything!'];
         this.config.center = true;
         this.config.vCenter = true;
@@ -120,9 +101,9 @@ export class TypingManager {
                     <label>Text Transform</label>
                     <select id="typing-textTransform" class="typing-select">
                         <option value="none">None</option>
-                        <option value="uppercase">UPPERCASE</option>
-                        <option value="lowercase">lowercase</option>
-                        <option value="capitalize">Capitalize</option>
+                        <option value="uppercase">Uppercase</option>
+                        <option value="lowercase">Lowercase</option>
+                        <option value="capitalize">Capitalize Words</option>
                     </select>
                 </div>
             </div>
@@ -160,13 +141,17 @@ export class TypingManager {
                 </div>
                 <div class="typing-field">
                     <label>Glow Intensity</label>
-                    <input type="range" id="typing-glowIntensity" min="1" max="30" value="${this.config.glowIntensity}" class="typing-range">
-                    <span class="typing-range-value" id="typing-glowIntensity-val">${this.config.glowIntensity}</span>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <input type="range" id="typing-glowIntensity" min="1" max="30" value="${this.config.glowIntensity}" class="typing-range">
+                        <span class="typing-range-value" id="typing-glowIntensity-val">${this.config.glowIntensity}</span>
+                    </div>
                 </div>
                 <div class="typing-field">
                     <label>Opacity</label>
-                    <input type="range" id="typing-opacity" min="0.1" max="1" step="0.1" value="${this.config.opacity}" class="typing-range">
-                    <span class="typing-range-value" id="typing-opacity-val">${this.config.opacity}</span>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <input type="range" id="typing-opacity" min="0.1" max="1" step="0.1" value="${this.config.opacity}" class="typing-range">
+                        <span class="typing-range-value" id="typing-opacity-val">${this.config.opacity}</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -178,16 +163,17 @@ export class TypingManager {
                 <div class="typing-field">
                     <label>Style</label>
                     <select id="typing-animationStyle" class="typing-select">
-                        <option value="typing">Typing (Smooth)</option>
-                        <option value="typewriter">Typewriter (Classic)</option>
-                        <option value="typing-fade">Typing + Fade</option>
-                        <option value="typing-glow">Typing + Glow</option>
+                        <option value="typing-classic">Typewriter (Classic)</option>
+                        <option value="typing-smooth">Typewriter (Smooth)</option>
+                        <option value="typing-v2">Typewriter (V2 / Focus)</option>
+                        <option value="typing-glow">Typewriter + Glow</option>
                         <option value="fade">Fade (Line)</option>
                         <option value="slide">Slide</option>
                         <option value="glitch">Glitch V1 (RGB Split)</option>
-                        <option value="glitch-v2">Glitch V2 (Scan Lines)</option>
+                        <option value="glitch-v2">Glitch V2 (Aggressive)</option>
                         <option value="glitch-v3">Glitch V3 (Distort)</option>
                         <option value="glitch-v4">Glitch V4 (Matrix)</option>
+                        <option value="glitch-v5">Glitch V5 (Cyberpunk)</option>
                         <option value="wave">Wave</option>
                         <option value="bounce">Bounce</option>
                         <option value="pulse">Pulse</option>
@@ -319,12 +305,15 @@ export class TypingManager {
 
     <!-- RIGHT: Preview + Output -->
     <div class="typing-panel typing-output">
-        <div class="typing-panel-header">
+        <div class="typing-panel-header" style="display:flex; justify-content:space-between; align-items:center;">
             <h2>Preview</h2>
-            <label class="typing-border-toggle">
-                <input type="checkbox" id="typing-show-border">
-                <span>Show border</span>
-            </label>
+            <div style="display:flex; gap:12px; align-items:center;">
+                <label class="typing-border-toggle">
+                    <input type="checkbox" id="typing-show-border">
+                    <span>Show border</span>
+                </label>
+                <button class="typing-btn-small" style="background:var(--accent-color); color:#fff; border-color:var(--accent-color);" id="typing-download-svg">⬇ Download SVG</button>
+            </div>
         </div>
 
         <div class="typing-preview-area" id="typing-preview-area">
@@ -352,7 +341,6 @@ export class TypingManager {
                 <h3>Raw SVG File</h3>
                 <div style="display:flex; gap:8px;">
                     <button class="typing-btn-small typing-copy-btn" id="typing-copy-svg">Copy</button>
-                    <button class="typing-btn-small" style="background:var(--accent-color); color:#fff; border-color:var(--accent-color);" id="typing-download-svg">⬇ Download High-Res SVG</button>
                 </div>
             </div>
             <pre class="typing-code typing-code-svg" id="typing-code-svg"></pre>

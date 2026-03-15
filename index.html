@@ -22,13 +22,16 @@
         <div class="nav-tabs">
             <button class="nav-btn active" data-tab="clock">Clock</button>
             <button class="nav-btn" data-tab="text">Text</button>
-            <button class="nav-btn" data-tab="update">Fake Update</button>
-            <button class="nav-btn" data-tab="media">Media</button>
             <button class="nav-btn" data-tab="typing">Typing SVG</button>
+            <button class="nav-btn" data-tab="update">Fake Update</button>
         </div>
         <div class="nav-spacer"></div>
-        <button id="fullscreen-btn" class="icon-btn" title="Fullscreen">⛶</button>
-        <button id="settings-btn" class="icon-btn" title="Settings">⚙</button>
+        <button id="fullscreen-btn" class="icon-btn" title="Fullscreen">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
+        </button>
+        <button id="settings-btn" class="icon-btn" title="Settings">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        </button>
     </nav>
 
     <!-- Main Content -->
@@ -58,11 +61,6 @@
                     <p>Press <strong>Enter</strong> or <strong>Esc</strong> to exit simulation.</p>
                 </div>
             </div>
-        </section>
-
-        <!-- Media Tab -->
-        <section id="media-tab" class="tab-content">
-            <div id="media-controls" class="controls-overlay"></div>
         </section>
 
         <!-- Typing SVG Tab -->
@@ -142,22 +140,6 @@
                 <div class="setting-row">
                     <label>Blur Effect</label>
                     <input type="range" id="setting-text-blur" min="0" max="10" step="1" value="0">
-                </div>
-            </div>
-
-            <!-- Media Settings -->
-            <div class="settings-section">
-                <h3>Media Album</h3>
-                <div class="setting-row">
-                    <label>Slide Duration</label>
-                    <select id="setting-slide-duration">
-                        <option value="3000">3 seconds</option>
-                        <option value="5000">5 seconds</option>
-                        <option value="6000" selected>6 seconds</option>
-                        <option value="10000">10 seconds</option>
-                        <option value="15000">15 seconds</option>
-                        <option value="30000">30 seconds</option>
-                    </select>
                 </div>
             </div>
 
